@@ -1,7 +1,7 @@
-package com.example.chatclient.application.port.inbound;
+package com.example.chatclient.domain.port.in; // Updated package
 
 import com.example.chatclient.domain.model.ChatMessage;
 
-public interface ChatRestApi {
+public interface SendMessageUseCase {
     String sendMessage(ChatMessage message);
 }

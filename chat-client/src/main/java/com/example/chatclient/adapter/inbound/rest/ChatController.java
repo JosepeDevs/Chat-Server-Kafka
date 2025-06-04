@@ -1,56 +1,46 @@
 package com.example.chatclient.adapter.inbound.rest;
 
-import com.example.chatclient.application.port.inbound.ChatRestApi;
+import com.example.chatclient.domain.port.in.ChatRestApi; // Updated import
+import com.example.chatclient.domain.port.in.SendMessageUseCase; // Updated import
 import com.example.chatclient.domain.model.ChatMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+// import org.springframework.web.bind.annotation.ExceptionHandler; // Removed
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+// import org.springframework.web.bind.annotation.ResponseStatus; // Removed
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus; // Import this
 
 import javax.validation.Valid; // Import this
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors; // Removed
 
 @RestController
 @RequestMapping("/api/chat")
-public class ChatController {
+@RequiredArgsConstructor
+@Slf4j
+public class ChatController implements ChatRestApi { // Implement the interface
 
-    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
-    private final ChatRestApi chatRestApi;
+    private final SendMessageUseCase sendMessageUseCase;
 
-    @Autowired
-    public ChatController(ChatRestApi chatRestApi) {
-        this.chatRestApi = chatRestApi;
-    }
-
+    @Override // Add Override annotation
     @PostMapping("/send")
-    public ResponseEntity<String> sendChatMessage(@Valid @RequestBody ChatMessage chatMessage) {
-        logger.info("Received POST request to /api/chat/send with message: {}", chatMessage);
+    public ResponseEntity<String> sendMessage(@Valid @RequestBody ChatMessage chatMessage) { // Renamed method
+        log.info("ChatController: Received POST request to /api/chat/send with message: {}", chatMessage);
         try {
-            String result = chatRestApi.sendMessage(chatMessage);
+            // The actual sending logic is delegated to the SendMessageUseCase.
+            // This controller method fulfills the ChatRestApi interface and handles HTTP concerns.
+            String result = sendMessageUseCase.sendMessage(chatMessage);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            logger.error("Error processing chat message via REST: {}", chatMessage, e);
+            log.error("ChatController: Error processing chat message via REST: {}", chatMessage, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending message");
         }
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        String errors = ex.getBindingResult()
-                            .getFieldErrors()
-                            .stream()
-                            .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                            .collect(Collectors.joining(", "));
-        logger.warn("Validation error: {}", errors);
-        return ResponseEntity.badRequest().body("Invalid request: " + errors);
-    }
+    // Removed local ExceptionHandler for MethodArgumentNotValidException,
+    // as it's now handled by GlobalExceptionHandler.
 }

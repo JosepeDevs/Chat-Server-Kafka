@@ -1,4 +1,4 @@
-package com.example.chatclient.application.port.outbound;
+package com.example.chatclient.domain.port.out; // Updated package
 
 import com.example.chatclient.domain.model.ChatMessage;
 

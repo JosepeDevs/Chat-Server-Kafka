@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: chat-client
+kafka:
+  consumer:
+    bootstrap-servers: X.tcp.ngrok.io:XXXXX # Placeholder, to be replaced by user
+    group-id: chat-group
+    topic: chat-topic # Consumer topic
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.trusted.packages: com.example.chatclient.domain.model # Trust our ChatMessage package
+      spring.json.value.default.type: com.example.chatclient.domain.model.ChatMessage # Default type for deserialization
+  producer:
+    bootstrap-servers: ${kafka.consumer.bootstrap-servers} # Reuse consumer bootstrap servers
+    topic: chat-topic # Producer topic, same for this example
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    # properties: # Optional: Add any specific producer properties if needed
+    #   acks: all
+
+# Server port for the Spring Boot application itself (if REST API is also used)
+server:
+  port: 8081

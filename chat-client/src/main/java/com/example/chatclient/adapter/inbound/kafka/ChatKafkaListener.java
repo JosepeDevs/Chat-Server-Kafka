@@ -17,7 +17,7 @@ public class ChatKafkaListener implements KafkaMessageConsumer { // Implement th
     private final ConsumeMessageUseCase consumeMessageUseCase;
 
     @Override // Add Override annotation
-    @KafkaListener(topics = "${kafka.consumer.topic}", groupId = "${kafka.consumer.group-id}")
+    @KafkaListener(topics = "${spring.kafka.consumer.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void consumeMessage(@Payload ChatMessage chatMessage) { // Renamed method
         log.info("ChatKafkaListener: Received message from Kafka: {}", chatMessage);
         try {

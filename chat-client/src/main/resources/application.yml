@@ -1,23 +1,23 @@
 spring:
   application:
     name: chat-client
-kafka:
-  consumer:
-    bootstrap-servers: localhost:9092
-    group-id: chat-group
-    topic: chat-topic # Consumer topic
-    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-    properties:
-      spring:
-        json:
-          trusted:
-            packages: com.example.chatclient.domain.model # Trust our ChatMessage package
-  producer:
-    bootstrap-servers: ${kafka.consumer.bootstrap-servers} # Reuse consumer bootstrap servers
-    topic: chat-topic # Producer topic, same for this example
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: chat-group
+      topic: chat-topic # Consumer topic
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.example.chatclient.domain.model # Trust our ChatMessage package
+    producer:
+      bootstrap-servers: ${spring.kafka.consumer.bootstrap-servers} # Reuse consumer bootstrap servers
+      topic: chat-topic # Producer topic, same for this example
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 # Server port for the Spring Boot application itself (if REST API is also used)
 server:

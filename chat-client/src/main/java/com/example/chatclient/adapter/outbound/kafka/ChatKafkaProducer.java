@@ -15,7 +15,7 @@ public class ChatKafkaProducer implements ChatMessageProducer {
 
     private final KafkaTemplate<String, ChatMessage> kafkaTemplate;
 
-    @Value("${kafka.producer.topic}")
+    @Value("${spring.kafka.producer.topic}")
     private String topic;
 
     @Override

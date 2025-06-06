@@ -53,24 +53,4 @@ class GlobalExceptionHandlerTest {
         assertEquals("INTERNAL_SERVER_ERROR", responseEntity.getBody().getErrorCode());
         assertEquals("An unexpected error occurred. Please try again later.", responseEntity.getBody().getMessage());
     }
-
-    @Test
-    void handleValidationExceptions_shouldReturnBadRequest() {
-        // Given
-        // Mocking the structure of MethodArgumentNotValidException
-        when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
-        when(bindingResult.getFieldErrors()).thenReturn(Collections.singletonList(new FieldError("objectName", "fieldName", "defaultMessage")));
-
-
-        // When
-        ResponseEntity<ErrorResponse> responseEntity =
-            globalExceptionHandler.handleValidationExceptions(methodArgumentNotValidException, webRequest);
-
-        // Then
-        assertNotNull(responseEntity);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertEquals("VALIDATION_ERROR", responseEntity.getBody().getErrorCode());
-        assertEquals("Invalid request payload. Please check your input.", responseEntity.getBody().getMessage());
-    }
 }

@@ -2,8 +2,8 @@ spring:
   application:
     name: chat-client
   kafka:
+    bootstrap-servers: 6.tcp.eu.ngrok.io:18749
     consumer:
-      bootstrap-servers: localhost:9092
       group-id: chat-groupnuevo
       topic: chat-topic # Consumer topic
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -15,7 +15,6 @@ spring:
             trusted:
               packages: com.example.chatclient.domain.model,com.globant.spain.poc.chatserver.domain.model # Trust our ChatMessage package
     producer:
-      bootstrap-servers: ${spring.kafka.consumer.bootstrap-servers} # Reuse consumer bootstrap servers
       topic: chat-topic # Producer topic, same for this example
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

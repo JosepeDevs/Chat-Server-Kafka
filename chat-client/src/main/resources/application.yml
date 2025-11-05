@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: chat-client
+  kafka:
+    bootstrap-servers: 6.tcp.eu.ngrok.io:18749
+    consumer:
+      group-id: chat-groupnuevo
+      topic: chat-topic # Consumer topic
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.type.mapping: com.globant.spain.poc.chatserver.domain.model.ChatMessage:com.example.chatclient.domain.model.ChatMessage
+        spring:
+          json:
+            trusted:
+              packages: com.example.chatclient.domain.model,com.globant.spain.poc.chatserver.domain.model # Trust our ChatMessage package
+    producer:
+      topic: chat-topic # Producer topic, same for this example
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+# Server port for the Spring Boot application itself (if REST API is also used)
+server:
+  port: 8081
